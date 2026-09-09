@@ -36,6 +36,7 @@ class SdCardReceiver : AnkiBroadcastReceiver() {
             Timber.i("media eject detected - closing collection and sending broadcast")
             val i = Intent()
             i.action = MEDIA_EJECT
+            i.setPackage(context.packageName)
             context.sendBroadcast(i)
             try {
                 val col = CollectionManager.getColUnsafe()
@@ -47,6 +48,7 @@ class SdCardReceiver : AnkiBroadcastReceiver() {
             Timber.i("media mount detected - sending broadcast")
             val i = Intent()
             i.action = MEDIA_MOUNT
+            i.setPackage(context.packageName)
             context.sendBroadcast(i)
         }
     }
