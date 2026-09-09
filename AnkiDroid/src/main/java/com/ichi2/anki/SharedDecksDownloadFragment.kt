@@ -503,7 +503,6 @@ class SharedDecksDownloadFragment : Fragment(R.layout.fragment_shared_decks_down
             }
         Timber.d("File URI -> $fileUri")
         fileIntent.setDataAndType(fileUri, mimeType)
-        fileIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         fileIntent.putExtra(EXTRA_IS_SHARED_DOWNLOAD, true)
         try {
             context?.startActivity(fileIntent)
