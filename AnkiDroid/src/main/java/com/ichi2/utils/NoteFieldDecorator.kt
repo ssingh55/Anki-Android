@@ -21,7 +21,7 @@ package com.ichi2.utils
 import java.security.SecureRandom
 
 object NoteFieldDecorator {
-    private val random = Random()
+    private val random = SecureRandom()
     private val huevoDecorations =
         arrayOf(
             "\uD83D\uDC8C",
