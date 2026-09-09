@@ -34,6 +34,7 @@
     <!-- Necessary for recording audio in a WebView -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" android:maxSdkVersion="25" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
@@ -45,6 +46,7 @@
                 android:description="@string/read_write_permission_description"
                 android:protectionLevel="dangerous"
                 />
+
     <permission
         android:name="com.ichi2.anki.permission.LAUNCH_INTENT_HANDLER"
         android:protectionLevel="signature" />
@@ -371,7 +373,7 @@
             />
         <activity
             android:name="com.ichi2.anki.Reviewer"
-            android:exported="true"
+            android:exported="false"
             android:theme="@style/Theme_Dark.Launcher"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
@@ -713,7 +715,7 @@
             android:name=".provider.CardContentProvider"
             android:authorities="${applicationId}.flashcards"
             android:enabled="true"
-            android:exported="true"
+            android:exported="false"
             tools:ignore="ExportedContentProvider"
             >
             <meta-data android:name="com.ichi2.anki.provider.spec" android:value="2" />
