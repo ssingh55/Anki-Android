@@ -18,7 +18,7 @@
 
 package com.ichi2.utils
 
-import java.util.Random
+import java.security.SecureRandom
 
 object NoteFieldDecorator {
     private val random = Random()
