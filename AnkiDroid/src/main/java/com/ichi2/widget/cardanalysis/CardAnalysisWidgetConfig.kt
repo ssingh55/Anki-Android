@@ -204,18 +204,23 @@ class CardAnalysisWidgetConfig : AnkiActivity(R.layout.activity_card_analysis_wi
 
                 val appWidgetId = intent.getAppWidgetId()
                 if (appWidgetId == INVALID_APPWIDGET_ID) {
+                    Timber.w("Received APPWIDGET_DELETED for invalid appWidgetId")
                     return
                 }
 
+                // Authorize appWidgetId against widgets managed by this application
                 val appWidgetManager = AppWidgetManager.getInstance(context)
                 val myWidgetProvider = ComponentName(context, CardAnalysisWidget::class.java)
                 val managedWidgetIds = appWidgetManager.getAppWidgetIds(myWidgetProvider)
 
-                if (appWidgetId.id !in managedWidgetIds) {
-                    Timber.w("Received APPWIDGET_DELETED for unmanaged appWidgetId: %d", appWidgetId.id)
+                if (appWidgetId !in managedWidgetIds) {
+                    // The appWidgetId does not belong to a widget managed by this application.
+                    // Log this as an attempted unauthorized operation and return.
+                    Timber.w("Received APPWIDGET_DELETED for unmanaged appWidgetId: %d", appWidgetId)
                     return
                 }
 
+                // Now safe to proceed with deletion as appWidgetId is authorized
                 preferences.deleteDeckData(appWidgetId)
             }
         }
