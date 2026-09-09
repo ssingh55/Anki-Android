@@ -18,6 +18,8 @@ package com.ichi2.anki.receiver
 
 import android.content.Context
 import android.content.Intent
+import android.os.Binder
+import android.os.Process
 import com.ichi2.anki.CollectionManager
 import com.ichi2.anki.common.android.AnkiBroadcastReceiver
 import timber.log.Timber
@@ -33,6 +35,11 @@ class SdCardReceiver : AnkiBroadcastReceiver() {
         intent: Intent,
     ) {
         if (intent.action == Intent.ACTION_MEDIA_EJECT) {
+            // Validate intent origin: ensure it's from the system
+            if (Binder.getCallingUid() != Process.SYSTEM_UID) {
+                Timber.w("Received spoofed MEDIA_EJECT broadcast from UID: %d. Ignoring.", Binder.getCallingUid())
+                return
+            }
             Timber.i("media eject detected - closing collection and sending broadcast")
             val i = Intent()
             i.action = MEDIA_EJECT
@@ -45,6 +52,11 @@ class SdCardReceiver : AnkiBroadcastReceiver() {
                 Timber.w(e, "Exception while trying to close collection likely because it was already unmounted")
             }
         } else if (intent.action == Intent.ACTION_MEDIA_MOUNTED) {
+            // Validate intent origin: ensure it's from the system
+            if (Binder.getCallingUid() != Process.SYSTEM_UID) {
+                Timber.w("Received spoofed MEDIA_MOUNTED broadcast from UID: %d. Ignoring.", Binder.getCallingUid())
+                return
+            }
             Timber.i("media mount detected - sending broadcast")
             val i = Intent()
             i.action = MEDIA_MOUNT
