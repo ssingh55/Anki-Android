@@ -1218,6 +1218,23 @@ abstract class AbstractFlashcardViewer :
             }
             false
         }
+        // Invoke custom IME for sensitive input field (password/answer field)
+        setupSecureInputMethodForAnswerField()
+    }
+
+    /**
+     * Sets up the secure input method for the answer field to provide keylogger protection.
+     * When the answer field gains focus, it programmatically switches to the custom secure IME.
+     */
+    private fun setupSecureInputMethodForAnswerField() {
+        answerField!!.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                // The custom IME should be declared in AndroidManifest.xml
+                // and available as a system service. This call requests it when the field gains focus.
+                imm.setInputMethod(answerField!!.windowToken, packageName + "/.SecureInputMethodService")
+            }
+        }
     }
 
     protected open fun restorePreferences(): SharedPreferences {

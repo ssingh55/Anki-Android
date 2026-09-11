@@ -5,12 +5,14 @@
 package com.ichi2.widget.cardanalysis
 
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -34,6 +36,7 @@ import com.ichi2.anki.ui.internationalization.sentenceCase
 import com.ichi2.anki.withProgress
 import com.ichi2.widget.AppWidgetId.Companion.INVALID_APPWIDGET_ID
 import com.ichi2.widget.AppWidgetId.Companion.getAppWidgetId
+import com.ichi2.widget.cardanalysis.CardAnalysisWidget
 import com.ichi2.widget.cardanalysis.CardAnalysisWidget.Companion.EXTRA_SELECTED_DECK_ID
 import dev.androidbroadcast.vbpd.viewBinding
 import timber.log.Timber
@@ -99,9 +102,11 @@ class CardAnalysisWidgetConfig : AnkiActivity(R.layout.activity_card_analysis_wi
         binding.changeBtn.text = TR.sentenceCase.selectDeck
         binding.changeBtn.setOnClickListener { showDeckSelectionDialog() }
         binding.doneBtn.setOnClickListener { close() }
-        registerReceiver(
+        ContextCompat.registerReceiver(
+            this,
             widgetRemovedReceiver,
             IntentFilter(AppWidgetManager.ACTION_APPWIDGET_DELETED),
+            ContextCompat.RECEIVER_NOT_EXPORTED,
         )
         registerDeckSelectedHandler(action = ::onDeckSelected)
     }
@@ -200,6 +205,19 @@ class CardAnalysisWidgetConfig : AnkiActivity(R.layout.activity_card_analysis_wi
 
                 val appWidgetId = intent.getAppWidgetId()
                 if (appWidgetId == INVALID_APPWIDGET_ID) {
+                    Timber.w("Received APPWIDGET_DELETED for invalid appWidgetId")
+                    return
+                }
+
+                // Validate appWidgetId against widgets managed by this application
+                val appWidgetManager = AppWidgetManager.getInstance(context)
+                val myWidgetProvider = ComponentName(context, CardAnalysisWidget::class.java)
+                val managedWidgetIds = appWidgetManager.getAppWidgetIds(myWidgetProvider)
+
+                if (appWidgetId.id !in managedWidgetIds) {
+                    // The appWidgetId does not belong to a widget managed by this application.
+                    // Log this as an attempted unauthorized operation and return.
+                    Timber.w("Received APPWIDGET_DELETED for unmanaged appWidgetId: %d", appWidgetId.id)
                     return
                 }
 

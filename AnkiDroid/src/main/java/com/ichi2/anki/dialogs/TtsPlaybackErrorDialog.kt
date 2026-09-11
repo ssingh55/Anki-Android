@@ -54,7 +54,7 @@ object TtsPlaybackErrorDialog {
         try {
             Timber.i("Opening TextToSpeech engine settings to change the engine")
             activity.startActivity(
-                Intent("com.android.settings.TTS_SETTINGS").apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK },
+                Intent("com.android.settings.TTS_SETTINGS"),
             )
         } catch (e: Exception) {
             CrashReportService.sendExceptionReport(e, e.localizedMessage)
