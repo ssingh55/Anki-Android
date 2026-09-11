@@ -46,6 +46,9 @@
                 android:description="@string/read_write_permission_description"
                 android:protectionLevel="dangerous"
                 />
+    <permission
+        android:name="com.ichi2.anki.permission.LAUNCH_INTENT_HANDLER"
+        android:protectionLevel="signature" />
 
     <supports-screens
         android:anyDensity="true"
@@ -87,7 +90,7 @@
     <application
         android:name="com.ichi2.anki.AnkiDroidApp"
         android:label="@string/app_name"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:windowSoftInputMode="adjustResize"
@@ -107,12 +110,17 @@
         the full package path is needed for manageSpaceActivity -->
         <activity
             android:name="com.ichi2.anki.ui.windows.managespace.ManageSpaceActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:taskAffinity=""
+            android:launchMode="singleTask"
+            android:allowTaskReparenting="false"/>
         <activity
             android:name="com.ichi2.anki.IntentHandler"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:exported="true"
+            android:taskAffinity=""
+            android:launchMode="singleTask"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -351,6 +359,8 @@
             android:name=".ui.windows.permissions.AllPermissionsExplanationActivity"
             android:permission="android.permission.START_VIEW_PERMISSION_USAGE"
             android:exported="true"
+            android:taskAffinity=""
+            android:launchMode="singleTask"
             tools:targetApi="31">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
@@ -373,7 +383,9 @@
             android:theme="@style/Theme_Dark.Launcher"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".DeckPicker">
+            android:parentActivityName=".DeckPicker"
+            android:taskAffinity=""
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -409,7 +421,8 @@
             android:label="@string/context_menu_anki_card_label"
             android:enabled="true"
             android:targetActivity=".IntentHandler2"
-            android:exported="true">
+            android:exported="true"
+            android:permission="com.ichi2.anki.permission.LAUNCH_INTENT_HANDLER">
             <intent-filter>
                 <action android:name="android.intent.action.PROCESS_TEXT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -421,7 +434,11 @@
             android:label="@string/fact_adder_intent_title"
             android:theme="@style/Theme_Dark.Launcher"
             android:exported="true"
+            android:permission="com.ichi2.anki.permission.LAUNCH_INTENT_HANDLER"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:taskAffinity=""
+            android:launchMode="singleTask"
+            android:allowTaskReparenting="false"
             >
             <intent-filter>
                 <action android:name="org.openintents.action.CREATE_FLASHCARD" />
@@ -491,7 +508,10 @@
         <activity
             android:name=".SharedDecksActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/download_deck" />
+            android:label="@string/download_deck"
+            android:exported="true"
+            android:taskAffinity=""
+            android:launchMode="singleTask" />
 
         <activity android:name=".IntroductionActivity"
             android:exported="false"
@@ -571,7 +591,9 @@
              by configuration button which appears when the widget is hold or resized.-->
         <activity
             android:name="com.ichi2.widget.deckpicker.DeckPickerWidgetConfig"
-            android:exported="false">
+            android:exported="false"
+            android:taskAffinity=""
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
